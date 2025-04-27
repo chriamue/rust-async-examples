@@ -1,9 +1,8 @@
+use crate::simple_http_client::SimpleHttpClient;
 use crate::tasks::redis::*;
 
-#[cfg(feature = "tokio")]
 use mini_redis::Result;
 
-#[cfg(feature = "tokio")]
 #[tokio::test]
 async fn tokio_redis() -> Result<()> {
     // Open a connection to the mini-redis address.
@@ -19,5 +18,14 @@ async fn tokio_redis() -> Result<()> {
 
     assert_eq!(result, Some("world".into()));
 
+    Ok(())
+}
+
+#[tokio::test]
+async fn tokio_http_post() -> Result<()> {
+    let test_body = "Hello from World!";
+    let response = SimpleHttpClient::post("http://httpbin.org/post", test_body).await?;
+    println!("POST response: {}", response);
+    assert!(response.contains(test_body));
     Ok(())
 }
