@@ -1,9 +1,16 @@
 [package]
 name = "rust-async-examples"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
-mini-redis = "0.4.1"
+tokio = { version = "1", features = ["full"], optional = true }
 bytes = "1.10.1"
+smol = { version = "2.0.2", optional = true }
+url = "2.5.0"
+mini-redis = { version = "0.4", optional = true }
+
+[features]
+default = ["tokio", "smol"]
+tokio = ["dep:tokio", "mini-redis"]
+smol = ["dep:smol"]

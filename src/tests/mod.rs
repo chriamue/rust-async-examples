@@ -1,1 +1,2 @@
+mod smol;
 mod tokio;

@@ -1,3 +1,4 @@
-pub mod redis;
+pub mod http;
 
-pub use redis::*;
+#[cfg(feature = "tokio")]
+pub mod redis;

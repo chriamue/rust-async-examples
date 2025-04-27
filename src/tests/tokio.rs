@@ -1,6 +1,9 @@
 use crate::tasks::redis::*;
+
+#[cfg(feature = "tokio")]
 use mini_redis::Result;
 
+#[cfg(feature = "tokio")]
 #[tokio::test]
 async fn tokio_redis() -> Result<()> {
     // Open a connection to the mini-redis address.
