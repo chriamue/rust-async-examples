@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Async Runtimes in Rust</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/night.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-dark.min.css"
+        />
+        <style>
+            .reveal pre {
+                box-shadow: none;
+                margin: 0;
+            }
+            .reveal pre code {
+                padding: 10px;
+                max-height: 400px;
+            }
+            .smaller-code pre code {
+                font-size: 0.7em;
+                line-height: 1.2;
+            }
+            .flex-column {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .flex-row {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+            }
+            .feature {
+                margin: 10px;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                width: 30%;
+            }
+            .side-by-side {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .reveal h1 {
+                font-size: 2.2em;
+            }
+            .reveal h2 {
+                font-size: 1.8em;
+            }
+            .reveal section {
+                text-align: left;
+            }
+            .reveal ul {
+                display: block;
+            }
+            .reveal li {
+                margin: 12px 0;
+            }
+            .mermaid {
+                background-color: rgba(255, 255, 255, 0.1);
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .mermaid svg {
+                background-color: transparent;
+                max-width: 900px;
+                max-height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <!-- Title Slide -->
+                <section>
+                    <h1>Async Runtimes in Rust</h1>
+                    <h3>A Practical Explanation</h3>
+                    <p><small>Created with Reveal.js</small></p>
+                </section>
+
+                <!-- Intro to Async Rust -->
+                <section>
+                    <h2>What is Async Rust?</h2>
+                    <ul>
+                        <li>
+                            Async/await is Rust's built-in syntax for
+                            asynchronous programming
+                        </li>
+                        <li>
+                            It enables high-performance I/O without blocking
+                            threads
+                        </li>
+                        <li>
+                            Async code creates <em>futures</em> that need to be
+                            executed by a runtime
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Process, Threads and Tasks Diagram -->
+                <section>
+                    <h2>Processes, Threads, and Tasks</h2>
+                    <div class="mermaid">
+                        <pre>
+graph TD
+    Process[OS Process] --> Thread1[OS Thread 1]
+    Process --> Thread2[OS Thread 2]
+    Process --> Thread3[OS Thread 3]
+
+    Thread1 --> Runtime1[Async Runtime]
+    Thread2 --> Runtime2[Async Runtime]
+
+    Runtime1 --> Task1[Async Task 1.1]
+    Runtime1 --> Task2[Async Task 1.2]
+    Runtime1 --> Task3[Async Task 1.3]
+    Runtime1 --> TaskN1[Async Task 1.N]
+
+    Runtime2 --> Task4[Async Task 2.1]
+    Runtime2 --> Task5[Async Task 2.2]
+    Runtime2 --> TaskN2[Async Task 2.N]
+
+    Thread3 --> BlockingWork[Blocking Work]
+
+    classDef os fill:#f96,stroke:#333,stroke-width:2px;
+    classDef runtime fill:#6b8e23,stroke:#333,stroke-width:2px;
+    classDef task fill:#69b,stroke:#333,stroke-width:1px;
+    classDef blocking fill:#b55,stroke:#333,stroke-width:1px;
+
+    class Process,Thread1,Thread2,Thread3 os;
+    class Runtime1,Runtime2 runtime;
+    class Task1,Task2,Task3,Task4,Task5,TaskN1,TaskN2 task;
+    class BlockingWork blocking;
+                        </pre>
+                    </div>
+                    <ul>
+                        <li>
+                            <strong>Process:</strong> An isolated program with
+                            its own memory space
+                        </li>
+                        <li>
+                            <strong>OS Threads:</strong> Execution units managed
+                            by the operating system
+                        </li>
+                        <li>
+                            <strong>Async Tasks:</strong> Lightweight units of
+                            work managed by async runtime
+                        </li>
+                        <li>
+                            <strong>Runtime:</strong> Schedules and executes
+                            async tasks on OS threads
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- How Async Runtimes Work -->
+                <section>
+                    <h2>How Async Runtimes Work</h2>
+                    <div class="mermaid">
+                        <pre>
+sequenceDiagram
+    participant App as Application Code
+    participant Runtime as Async Runtime
+    participant IO as I/O Subsystem
+
+    Note over App,IO: Task Creation & Execution
+    App->>Runtime: Create async task
+    Runtime->>Runtime: Schedule task
+    Runtime->>App: Execute task until .await
+
+    Note over App,IO: I/O Operation
+    App->>IO: Request I/O (e.g., read file)
+    IO-->>Runtime: Register interest in completion
+    Runtime->>Runtime: Suspend task, switch to another
+
+    Note over App,IO: Task Resumption
+    IO-->>Runtime: Notify I/O completion
+    Runtime->>Runtime: Reschedule suspended task
+    Runtime->>App: Resume task after .await
+    App->>App: Continue execution
+                        </pre>
+                    </div>
+                    <p>
+                        Async runtimes efficiently multiplex many tasks onto
+                        fewer OS threads
+                    </p>
+                </section>
+
+                <!-- Resources Slide -->
+                <section>
+                    <h2>Learning Resources</h2>
+                    <ul>
+                        <li>
+                            <a
+                                href="https://rust-lang.github.io/async-book/"
+                                target="_blank"
+                                >Async Book</a
+                            >
+                            - Official guide to async programming in Rust
+                        </li>
+                        <li>
+                            <a
+                                href="https://tokio.rs/tokio/tutorial"
+                                target="_blank"
+                                >Tokio Tutorial</a
+                            >
+                            - Great introduction to Tokio
+                        </li>
+                        <li>
+                            <a href="https://docs.rs/smol" target="_blank"
+                                >smol Documentation</a
+                            >
+                            - API docs and examples
+                        </li>
+                        <li>
+                            <a
+                                href="https://github.com/stjepang/smol"
+                                target="_blank"
+                                >smol on GitHub</a
+                            >
+                            - Source code and more examples
+                        </li>
+                        <li>
+                            <a
+                                href="https://blog.rust-lang.org/inside-rust/2023/02/13/async-rust-2023.html"
+                                target="_blank"
+                                >Async Rust in 2023</a
+                            >
+                            - The current state of Async Rust
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Thank You Slide -->
+                <section>
+                    <h1>Thank You!</h1>
+                    <p>Questions?</p>
+                </section>
+            </div>
+        </div>
+
+        <!-- Required scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/markdown/markdown.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/highlight/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-mermaid-plugin@11.4.1/plugin/mermaid/mermaid.js"></script>
+
+        <script>
+            // Initialize Reveal.js
+            Reveal.initialize({
+                hash: true,
+                slideNumber: true,
+                transition: "slide",
+                plugins: [
+                    RevealMarkdown,
+                    RevealHighlight,
+                    RevealNotes,
+                    RevealMermaid,
+                ],
+                // Optional configurations
+                controls: true,
+                progress: true,
+                center: true,
+                mermaid: {
+                    theme: "dark",
+                },
+            });
+        </script>
+    </body>
+</html>
