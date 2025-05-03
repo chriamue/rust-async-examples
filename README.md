@@ -15,6 +15,12 @@ cargo install mini-redis
 
 https://rust-lang.github.io/async-book/08_ecosystem/00_chapter.html
 
+### Scala
+
+https://www.youtube.com/watch?v=Hlu-zYeNsSU
+https://www.youtube.com/watch?v=OH5cxLNTTPo
+https://www.youtube.com/watch?v=GA8NZVGPiNo
+
 ## Slides
 
 Start slides with:
