@@ -11,6 +11,38 @@ Examples to explain rust async
 cargo install mini-redis
 ```
 
+## Examples
+
+### Async HTTP POST using Tokio runtime
+
+```sh
+cargo run --example tokio_http_post --features tokio
+```
+
+---
+
+### Thread Hierarchy (std::thread)
+
+```sh
+cargo run --example thread_hierarchy
+```
+
+---
+
+### Thread Hierarchy with Panics (std::thread)
+
+```sh
+cargo run --example thread_hierarchy_panics
+```
+
+---
+
+### Async Task Hierarchy with Panics (Tokio)
+
+```sh
+cargo run --example tokio_hierarchy_panics --features tokio
+```
+
 ## Sources
 
 https://rust-lang.github.io/async-book/08_ecosystem/00_chapter.html
