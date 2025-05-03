@@ -22,7 +22,7 @@ async fn tokio_redis() -> Result<()> {
 }
 
 #[tokio::test]
-async fn tokio_http_post() -> Result<()> {
+async fn tokio_http_post() -> std::result::Result<()> {
     let test_body = "Hello from World!";
     let response = SimpleHttpClient::post("http://httpbin.org/post", test_body).await?;
     println!("POST response: {}", response);
