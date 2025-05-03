@@ -1,0 +1,51 @@
+@startuml
+title Program, Threads, and Tasks Lifecycle
+
+' Entities
+class Program
+class Process
+class Thread1
+class Thread2
+class Thread2_1
+class Thread2_2
+class TaskA
+class TaskB
+class TaskC
+
+' Relationships
+Program --> Process : starts >
+Process --> Thread1 : spawns >
+Process --> Thread2 : spawns >
+Thread2 --> Thread2_1 : spawns >
+Thread2 --> Thread2_2 : spawns >
+Thread2_2 --> TaskA : spawns >
+Thread2_2 --> TaskB : spawns >
+Thread2_2 --> TaskC : spawns >
+
+' Show what happens if Thread2_2 dies
+Thread2_2 -[#orange,dotted]-> TaskA : may continue >
+Thread2_2 -[#orange,dotted]-> TaskB : may continue >
+Thread2_2 -[#orange,dotted]-> TaskC : may continue >
+
+' Notes
+note right of Program
+A Program is loaded into memory
+and becomes a Process.
+end note
+
+note right of Thread2_2
+If Thread 2.2 dies (panics or exits),
+its tasks (A, B, C) may continue running
+as long as the process is alive.
+OS threads are independent.
+end note
+
+note right of TaskA
+Tasks are units of work
+executed by threads.
+If their parent thread dies,
+they may continue running
+unless the whole process exits.
+end note
+
+@enduml
