@@ -43,6 +43,21 @@ cargo run --example thread_hierarchy_panics
 cargo run --example tokio_hierarchy_panics --features tokio
 ```
 
+### Tokio Thread Pool Demo (configurable worker threads)
+
+You can control the number of worker threads in the Tokio thread pool using the `TOKIO_WORKER_THREADS` environment variable:
+
+```sh
+# Run with 1 worker thread (default)
+cargo run --example tokio_threadpool --features tokio
+
+# Run with 3 worker threads
+TOKIO_WORKER_THREADS=3 cargo run --example tokio_threadpool --features tokio
+```
+
+This demonstrates how thread pool size affects concurrency for CPU-bound tasks.
+
+
 ## Sources
 
 https://rust-lang.github.io/async-book/08_ecosystem/00_chapter.html

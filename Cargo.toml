@@ -34,3 +34,7 @@ required-features = ["tokio"]
 [[example]]
 name = "tokio_await"
 required-features = ["tokio"]
+
+[[example]]
+name = "tokio_threadpool"
+required-features = ["tokio"]
