@@ -195,6 +195,131 @@ sequenceDiagram
                     </p>
                 </section>
 
+                <!-- Scenario: Thread Pool Size and Blocking Tasks -->
+                <section>
+                    <h2>Thread Pools</h2>
+                    <section>
+                        <ul>
+                            <li>
+                                <strong>Async tasks</strong> yield at .await, so
+                                many can share a single thread.
+                            </li>
+                            <li>
+                                <strong>CPU-bound or blocking tasks</strong> do
+                                not yield, so they block the thread.
+                            </li>
+                            <li>
+                                <strong>Thread pool size</strong> limits how
+                                many blocking tasks can run in parallel.
+                            </li>
+                        </ul>
+                        <p>
+                            <strong>Observation:</strong> With 1 thread, 3
+                            CPU-bound tasks take 3x longer than with 3 threads.
+                        </p>
+                        <aside class="notes">
+                            If you run three CPU-bound tasks with only one
+                            worker thread, they run sequentially. With three
+                            threads, they run in parallel. This is a key
+                            difference between async (I/O-bound) and blocking
+                            (CPU-bound) workloads.
+                        </aside>
+                    </section>
+                    <!-- Subslide with code -->
+                    <section>
+                        <pre><code class="rust smaller-code">
+                // Run with 1 worker thread
+                TOKIO_WORKER_THREADS=1 cargo run --example tokio_threadpool --features tokio
+
+                // Run with 3 worker threads
+                TOKIO_WORKER_THREADS=3 cargo run --example tokio_threadpool --features tokio
+                        </code></pre>
+                    </section>
+                </section>
+
+                <!-- Scenario: Forgetting to Await -->
+                <section>
+                    <h2>Forgetting to Await</h2>
+                    <section>
+                        <ul>
+                            <li>
+                                Creating an async function returns a future, but
+                                does not execute it.
+                            </li>
+                            <li>
+                                The future only runs when you
+                                <code>.await</code> it.
+                            </li>
+                            <li>
+                                If you forget to await, the code inside the
+                                async function never runs!
+                            </li>
+                        </ul>
+                        <p>
+                            <strong>Observation:</strong> Only the awaited
+                            animals run; the rabbit never does!
+                        </p>
+                        <aside class="notes">
+                            This is a common pitfall: forgetting to await an
+                            async function means it never executes. Always
+                            remember to await your futures!
+                        </aside>
+                    </section>
+                    <!-- Subslide with code -->
+                    <section>
+                        <pre><code class="rust smaller-code">
+                let lion = lion_runs(); // Not running yet!
+                let fox = fox_runs();   // Not running yet!
+                let rabbit = rabbit_runs(); // Not running yet!
+
+                fox.await;
+                lion.await;
+                // rabbit is never awaited!
+                        </code></pre>
+                    </section>
+                </section>
+
+                <!-- Scenario: Panicking Tasks and Orphaned Children -->
+                <section>
+                    <h2>Panicking Tasks</h2>
+                    <section>
+                        <ul>
+                            <li>
+                                If a parent thread or task panics, its child
+                                threads/tasks may continue running.
+                            </li>
+                            <li>
+                                In Rust, OS threads and async tasks are
+                                independent unless explicitly managed.
+                            </li>
+                            <li>
+                                Orphaned tasks may finish, or may be dropped if
+                                the process exits.
+                            </li>
+                        </ul>
+                        <p>
+                            <strong>Observation:</strong> Child tasks may
+                            outlive their parent if not awaited or managed.
+                        </p>
+                        <aside class="notes">
+                            This is important for resource management and
+                            correctness. Always consider what happens to child
+                            tasks if their parent panics or exits.
+                        </aside>
+                    </section>
+                    <!-- Subslide with code -->
+                    <section>
+                        <pre><code class="rust smaller-code">
+                // Parent spawns 3 child tasks, then panics
+                let a = tokio::spawn(...);
+                let b = tokio::spawn(...);
+                let c = tokio::spawn(...);
+                panic!("Parent panics");
+                // a, b, c may still finish!
+                        </code></pre>
+                    </section>
+                </section>
+
                 <!-- Resources Slide -->
                 <section>
                     <h2>Learning Resources</h2>
