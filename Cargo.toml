@@ -28,6 +28,10 @@ name = "thread_deadlock"
 required-features = []
 
 [[example]]
+name = "thread_poisoned"
+required-features = []
+
+[[example]]
 name = "thread_hierarchy_panics"
 required-features = []
 

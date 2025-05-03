@@ -37,6 +37,14 @@ cargo run --example thread_deadlock
 
 ---
 
+### Thread Poisoned (std::thread)
+
+```sh
+cargo run --example thread_poisoned
+```
+
+---
+
 ### Thread Hierarchy with Panics (std::thread)
 
 ```sh
