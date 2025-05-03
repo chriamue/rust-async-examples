@@ -17,16 +17,20 @@ smol = ["dep:smol"]
 
 [[example]]
 name = "tokio_http_post"
-features = ["tokio"]
+required-features = ["tokio"]
 
 [[example]]
 name = "thread_hierarchy"
-features = []
+required-features = []
 
 [[example]]
 name = "thread_hierarchy_panics"
-features = []
+required-features = []
 
 [[example]]
 name = "tokio_hierarchy_panics"
-features = ["tokio"]
+required-features = ["tokio"]
+
+[[example]]
+name = "tokio_await"
+required-features = ["tokio"]
