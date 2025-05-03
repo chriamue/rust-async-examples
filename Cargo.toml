@@ -18,3 +18,11 @@ smol = ["dep:smol"]
 [[example]]
 name = "tokio_http_post"
 features = ["tokio"]
+
+[[example]]
+name = "thread_hierarchy"
+features = []
+
+[[example]]
+name = "thread_hierarchy_panics"
+features = []
