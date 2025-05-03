@@ -24,6 +24,10 @@ name = "thread_hierarchy"
 required-features = []
 
 [[example]]
+name = "thread_deadlock"
+required-features = []
+
+[[example]]
 name = "thread_hierarchy_panics"
 required-features = []
 

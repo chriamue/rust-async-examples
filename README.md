@@ -29,6 +29,14 @@ cargo run --example thread_hierarchy
 
 ---
 
+### Thread Deadlock (std::thread)
+
+```sh
+cargo run --example thread_deadlock
+```
+
+---
+
 ### Thread Hierarchy with Panics (std::thread)
 
 ```sh
