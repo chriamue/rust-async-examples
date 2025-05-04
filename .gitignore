@@ -19,3 +19,19 @@ target/
 # Added by cargo
 
 /target
+
+# Scala specific
+.scala-build/
+.bsp/
+target/
+project/target/
+project/project/
+*.class
+*.log
+.metals/
+.bloop/
+metals.sbt
+.ammonite/
+
+# Jupyter notebook
+.ipynb_checkpoints/

@@ -77,12 +77,33 @@ This demonstrates how thread pool size affects concurrency for CPU-bound tasks.
 ## Sources
 
 https://rust-lang.github.io/async-book/08_ecosystem/00_chapter.html
+https://www.youtube.com/watch?v=GA8NZVGPiNo
 
 ### Scala
 
-https://www.youtube.com/watch?v=Hlu-zYeNsSU
-https://www.youtube.com/watch?v=OH5cxLNTTPo
-https://www.youtube.com/watch?v=GA8NZVGPiNo
+#### Sync, Async, Blocking and Non-Blocking | Rock the JVM
+
+[![Sync, Async, Blocking and Non-Blocking | Rock the JVM](https://img.youtube.com/vi/Hlu-zYeNsSU/0.jpg)](https://www.youtube.com/watch?v=Hlu-zYeNsSU)
+
+[Watch on YouTube](https://www.youtube.com/watch?v=Hlu-zYeNsSU)
+
+---
+
+#### Adam Rosien - Async/Await for the Monadic Programmer | Scala Days 2023 Seattle
+
+[![Adam Rosien - Async/Await for the Monadic Programmer | Scala Days 2023 Seattle](https://img.youtube.com/vi/OH5cxLNTTPo/0.jpg)](https://www.youtube.com/watch?v=OH5cxLNTTPo)
+
+[Watch on YouTube](https://www.youtube.com/watch?v=OH5cxLNTTPo)
+
+---
+
+#### Scala Programming - Introduction to Threads and Futures
+
+[![Scala Programming - Introduction to Threads and Futures](https://img.youtube.com/vi/6b24sszy6Js/0.jpg)](https://youtu.be/6b24sszy6Js)
+
+[Watch on YouTube](https://youtu.be/6b24sszy6Js)
+
+---
 
 ## Slides
 
