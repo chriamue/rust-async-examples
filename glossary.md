@@ -39,6 +39,9 @@ A mutual exclusion primitive useful for protecting shared data. In async Rust, `
 ## Non-blocking
 Operations that allow the program to continue executing other tasks while waiting for an operation to complete. This is a key feature of async programming.
 
+## Orphaned Task
+A task that continues running after its logical parent or spawner has completed or failed. Orphaned tasks can lead to resource leaks and unexpected behavior if not properly managed. Different concurrency frameworks handle orphaned tasks differently - some automatically cancel child tasks when parents complete (structured concurrency), while others (like basic Futures in Scala or Tokio tasks without explicit management) allow orphans to continue execution.
+
 ## Pin
 A Rust concept used in async programming to guarantee that the memory location of a future does not change, which is required for certain types of self-referential data.
 
