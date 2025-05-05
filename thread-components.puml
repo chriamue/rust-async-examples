@@ -27,19 +27,6 @@ Program "1" -- "many" Process : loaded as >
 Process "1" -- "many" Thread : contains >
 Thread "1" -- "many" Task : executes >
 
-Program : Executable Code : binary
-Process : Heap : dynamic memory
-Process : Code Segment : instructions
-Process : Data Segment : global/static data
-Process : Process ID : u32
-
-Thread : Thread ID : u32
-Thread : Stack : [local variables, return addresses]
-Thread : Program Counter : address
-
-Task : Task ID : u32
-Task : Task State : Ready/Running/Waiting/Finished
-
 note right of Program
 A Program is an executable file on disk.
 When started, it becomes a Process.
