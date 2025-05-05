@@ -105,6 +105,20 @@ https://www.youtube.com/watch?v=GA8NZVGPiNo
 
 ---
 
+#### Futures and Async: When to Use Which?
+
+[![Futures and Async: When to Use Which?](https://img.youtube.com/vi/TyuPdFDxkro/0.jpg)](https://youtu.be/TyuPdFDxkro)
+
+[Watch on YouTube](https://youtu.be/TyuPdFDxkro)
+
+---
+
+https://www.baeldung.com/scala/scala-async
+
+https://towardsdev.com/working-with-futures-in-scala-a-quick-introduction-9223703ab25e
+
+https://www.baeldung.com/scala/synchronous-handling-of-futures
+
 ## Slides
 
 Start slides with:
