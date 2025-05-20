@@ -6,22 +6,26 @@ fn animal_find_food<F>(animal: &'static str, food: Arc<Mutex<i32>>, action: F)
 where
     F: FnOnce(&mut i32) + Send + 'static,
 {
-    thread::spawn(move || {
-        println!("{} tries to get the food...", animal);
-        match food.lock() {
-            Ok(mut food) => {
-                action(&mut *food);
-                println!("{} is done with the food.", animal);
+    let thread_name = format!("{} thread", animal);
+    thread::Builder::new()
+        .name(thread_name.clone())
+        .spawn(move || {
+            println!("{} tries to get the food...", animal);
+            match food.lock() {
+                Ok(mut food) => {
+                    action(&mut *food);
+                    println!("{} is done with the food.", animal);
+                }
+                Err(poisoned) => {
+                    println!(
+                        "{} found the food poisoned! Value: {}",
+                        animal,
+                        *poisoned.get_ref()
+                    );
+                }
             }
-            Err(poisoned) => {
-                println!(
-                    "{} found the food poisoned! Value: {}",
-                    animal,
-                    *poisoned.get_ref()
-                );
-            }
-        }
-    });
+        })
+        .expect(&format!("Failed to spawn thread: {}", thread_name));
 }
 
 fn main() {
