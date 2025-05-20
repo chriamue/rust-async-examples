@@ -1,8 +1,12 @@
-use std::sync::{Arc, Mutex};
+use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::time::Duration;
 
-fn animal_find_food<F>(animal: &'static str, food: Arc<Mutex<i32>>, action: F)
+fn animal_find_food<F>(
+    animal: &'static str,
+    food: Arc<Mutex<i32>>,
+    action: F,
+) -> thread::JoinHandle<()>
 where
     F: FnOnce(&mut i32) + Send + 'static,
 {
@@ -25,15 +29,18 @@ where
                 }
             }
         })
-        .expect(&format!("Failed to spawn thread: {}", thread_name));
+        .expect(&format!("Failed to spawn thread: {}", thread_name))
 }
 
 fn main() {
     let food = Arc::new(Mutex::new(0));
 
+    // Channel to signal when Bear is about to panic
+    let (tx, rx) = mpsc::channel();
+
     // 🦁 Lion takes a bite
     let lion_food = Arc::clone(&food);
-    let _lion = animal_find_food("🦁 Lion", lion_food, |food| {
+    let lion = animal_find_food("🦁 Lion", lion_food, |food| {
         println!("🦁 Lion takes a bite!");
         *food += 1;
         thread::sleep(Duration::from_millis(100));
@@ -41,22 +48,44 @@ fn main() {
 
     // 🐻 Bear panics while holding the mutex
     let bear_food = Arc::clone(&food);
-    let _bear = animal_find_food("🐻 Bear", bear_food, |_food| {
+    let tx_bear = tx.clone();
+    let bear = animal_find_food("🐻 Bear", bear_food, move |food| {
         println!("🐻 Bear is about to panic!");
+        // Notify Fox that Bear is about to panic
+        *food += 1;
+        tx_bear.send(()).unwrap();
         panic!("🐻 Bear dropped the food (panicked)!");
     });
 
-    // 🦊 Fox takes a bite (but will find the food poisoned)
+    // 🦊 Fox waits for Bear's signal before trying to eat
     let fox_food = Arc::clone(&food);
-    let _fox = animal_find_food("🦊 Fox", fox_food, |food| {
-        println!("🦊 Fox takes a bite!");
-        *food += 1;
-        thread::sleep(Duration::from_millis(100));
-    });
+    let fox = thread::Builder::new()
+        .name("🦊 Fox thread".to_string())
+        .spawn(move || {
+            // Wait for Bear to panic
+            rx.recv().unwrap();
+            println!("🦊 Fox tries to get the food...");
+            match fox_food.lock() {
+                Ok(mut food) => {
+                    println!("🦊 Fox takes a bite!");
+                    *food += 1;
+                    thread::sleep(Duration::from_millis(100));
+                    println!("🦊 Fox is done with the food.");
+                }
+                Err(poisoned) => {
+                    println!(
+                        "🦊 Fox found the food poisoned! Value: {}",
+                        *poisoned.get_ref()
+                    );
+                }
+            }
+        })
+        .unwrap();
 
     // Wait for all threads to finish
-    // (We can't join the threads directly since animal_find_food returns nothing,
-    // so let's sleep a bit to let them finish for this demo.)
-    thread::sleep(Duration::from_secs(1));
+    let _ = lion.join();
+    let _ = bear.join();
+    let _ = fox.join();
+
     println!("Main thread: done.");
 }
